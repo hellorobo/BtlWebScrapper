@@ -60,20 +60,24 @@ if isPageLoaded:
     soup = BeautifulSoup(html, 'lxml')
 
     blogposts = soup.find('ul', id="btl-blog-posts-ul")
-    items = soup.findAll('div', class_="btl-blog-posts-contents-right")
-    pattern = '\bExam Study\b'
+    items = blogposts.findAll('div', class_="btl-blog-posts-contents-right")
+    pattern = r'\bexam study\b'
     matches = []
     for i in items:
         post = i.getText()
-        matches.append(re.search(pattern, post, re.IGNORECASE))
+        match = re.search(pattern, post, re.IGNORECASE)
+        if match:
+            matches.append(post)
 
     if len(matches) > 0:
-        print(f'patten matched in: \"{post}\"')
+        message = 'patten matched in: \n'
+        for m in matches:
+            message += f' --> {m}\n'
     else:
-        print(f'no match for {pattern}')
+        message = 'no matches found in posts :('
     
 else:
     message = 'Couldn\'t retrieve page contents'
 
-
+print(message)
 # TODO: sent email
