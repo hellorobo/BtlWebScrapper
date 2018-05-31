@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
+import re
 
 #a1 = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
 #a2 = ' (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'
@@ -16,7 +16,8 @@ chrome_bin = '/usr/bin/chrome'
 print(f'chrome_bin: {chrome_bin}')
 
 # $ export CHROME_DRIVER=~/Python/BtlWebScrapper/venv/chromedriver/chromedriver
-chrome_driver = os.environ['CHROME_DRIVER']
+chrome_driver = '/home/user1/Python/BtlWebScrapper/venv/chromedriver/chromedriver'
+#chrome_driver = os.environ['CHROME_DRIVER']
 print(f'chrome_driver: {chrome_driver}')
 
 # chrome driver logging
@@ -47,16 +48,32 @@ neededElement = 'btl-blog-post-1-right'
 try:
     element_present = EC.presence_of_element_located((By.ID, neededElement))
     WebDriverWait(driver, timeout).until(element_present)
+    isPageLoaded = True
     print("OK, found page element")
 except TimeoutException:
+    isPageLoaded = False
     print ("Timed out waiting for page to load")
 
-html = driver.page_source
-driver.close()
-soup = BeautifulSoup(html, 'lxml')
+if isPageLoaded:
+    html = driver.page_source
+    driver.close()
+    soup = BeautifulSoup(html, 'lxml')
 
-blogposts = soup.find('ul', id="btl-blog-posts-ul")
-items = soup.findAll('div', class_="btl-blog-posts-contents-right")
-posts = []
-for i in items:
-    posts.append(i.getText())
+    blogposts = soup.find('ul', id="btl-blog-posts-ul")
+    items = soup.findAll('div', class_="btl-blog-posts-contents-right")
+    pattern = '\bExam Study\b'
+    matches = []
+    for i in items:
+        post = i.getText()
+        matches.append(re.search(pattern, post, re.IGNORECASE))
+
+    if len(matches) > 0:
+        print(f'patten matched in: \"{post}\"')
+    else:
+        print(f'no match for {pattern}')
+    
+else:
+    message = 'Couldn\'t retrieve page contents'
+
+
+# TODO: sent email
