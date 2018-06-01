@@ -9,13 +9,13 @@ url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
 wantedString = 'Exam Study'
 
 # $ export CHROME_PATH=/usr/bin/chrome
-chrome_bin = os.environ['CHROME_PATH']
+chrome_bin = os.environ['GOOGLE_CHROME_BIN']
 #chrome_bin = '/usr/bin/chrome'
 print(f'chrome_bin: {chrome_bin}')
 
 # $ export CHROME_DRIVER=~/Python/BtlWebScrapper/venv/chromedriver/chromedriver
 # chrome_driver = '/home/user1/Python/BtlWebScrapper/venv/chromedriver/chromedriver'
-chrome_driver = os.environ['CHROME_DRIVER']
+chrome_driver = os.environ['CHROMEDRIVER_PATH']
 print(f'chrome_driver: {chrome_driver}')
 
 chrome_options = Options()
