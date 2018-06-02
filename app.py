@@ -145,8 +145,8 @@ if message:
 smsServer1 = os.environ['SMS_SERVER1']
 smsServer2 = os.environ['SMS_SERVER2']
 smsToken = os.environ['SMS_TOKEN']
-smsFrom = os.environ['SMS_NUMBER']
-smsTo = os.environ['SMS_NUMBER']
+smsFrom = os.environ['SMS_FROM']
+smsTo = os.environ['SMS_TO']
 smsMessage = f'{wantedString}, found on {siteName}'
 
 result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
