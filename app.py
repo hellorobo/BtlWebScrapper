@@ -142,14 +142,14 @@ if message:
     response = mailjet.send.create(email)
     print("MailJet response:{}".format(response))
 
-smsServer1 = os.environ['SMS_SERVER1']
-smsServer2 = os.environ['SMS_SERVER2']
-smsToken = os.environ['SMS_TOKEN']
-smsFrom = os.environ['SMS_FROM']
-smsTo = os.environ['SMS_TO']
-smsMessage = f'{wantedString}, found on {siteName}'
+    smsServer1 = os.environ['SMS_SERVER1']
+    smsServer2 = os.environ['SMS_SERVER2']
+    smsToken = os.environ['SMS_TOKEN']
+    smsFrom = os.environ['SMS_FROM']
+    smsTo = os.environ['SMS_TO']
+    smsMessage = f'{wantedString}, found on {siteName}'
 
-result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
-if result != '<Response [200]>':
-    result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
-print(f'SmsAPI response:{result}')
+    result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
+    if result != '<Response [200]>':
+        result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
+    print(f'SmsAPI response:{result}')
