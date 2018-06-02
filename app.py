@@ -7,10 +7,13 @@ import re
 from mailjet_rest import Client
 
 def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
-    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}'
+    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}&json=True'
     requestHeader = {"Authorization": f"Bearer {smsToken}"}
+    print(f'requestUrl: {requestUrl}')
+    print(f'requestHeader: {requestHeader}')
     result = requests.get(requestUrl,headers=requestHeader)
-    
+    print(result.text)
+
     return result
 
 url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
@@ -149,4 +152,4 @@ smsMessage = f'{wantedString}, found on {siteName}\n Go to URL: {url}'
 result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
 if result != '<Response [200]>':
     result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
-print(f'sms server response: {result.text}')
+print(f'sms server response: {result}')
