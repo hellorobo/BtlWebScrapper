@@ -8,7 +8,7 @@ from mailjet_rest import Client
 
 def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
     requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}format=json'
-    requestHeader = f'Authorization Bearer {smsToken}'
+    requestHeader = {"Authorization": f"Bearer {smsToken}"}
     result = requests.get(requestUrl,headers=requestHeader)
     
     return result
@@ -104,7 +104,7 @@ if message:
     body {font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;}
     h2 {clear: both;font-size: 130%; }
     h3 {clear: both;font-size: 115%;margin-left: 20px;margin-top: 30px;}
-    p {margin-left: 20px; font-size: 12px;}
+    p {margin-left: 20px; font-size: 14px;}
     </style>
     '''
 
@@ -141,7 +141,7 @@ if message:
 
 smsServer1 = os.environ['SMS_SERVER1']
 smsServer2 = os.environ['SMS_SERVER2']
-smsToken = {"Authorization": "Bearer ".format(os.environ['SMS_TOKEN'])}
+smsToken = os.environ['SMS_TOKEN']
 smsFrom = os.environ['SMS_NUMBER']
 smsTo = os.environ['SMS_NUMBER']
 smsMessage = f'{wantedString}, found on {siteName}\n Go to URL: {url}'
