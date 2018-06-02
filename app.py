@@ -7,12 +7,10 @@ import re
 from mailjet_rest import Client
 
 def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
-    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to={smsTo}&message={smsMessage}&json=True'
+    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to={smsTo}&message={smsMessage}&format=json'
     requestHeader = {"Authorization": f"Bearer {smsToken}"}
-    print(f'requestUrl: {requestUrl}')
-    print(f'requestHeader: {requestHeader}')
     result = requests.get(requestUrl,headers=requestHeader)
-    print(result.text)
+    print(f'SmsAPI:{result}')
 
     return result
 
@@ -147,9 +145,9 @@ if message:
     smsToken = os.environ['SMS_TOKEN']
     smsFrom = os.environ['SMS_FROM']
     smsTo = os.environ['SMS_TO']
-    smsMessage = f'{wantedString}, found on {siteName}'
+    smsMessage = f'ALERT! Heroku/btl-webscrapper found \'{wantedString}\' on {url}'
 
     result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
-    if result != '<Response [200]>':
+    if result.status_code != 200:
         result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
-    print(f'SmsAPI response:{result}')
+    print(f'SmsAPI response:{result.text}')
