@@ -6,7 +6,7 @@ import re
 from mailjet_rest import Client
 
 url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
-wantedString = 'Exam Study'
+wantedString = os.environ['SEARCH_STRING']
 siteName = 'Born To Learn'
 
 # $ export CHROME_PATH=/usr/bin/chrome
