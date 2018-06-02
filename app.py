@@ -5,6 +5,13 @@ from selenium.webdriver.chrome.options import Options
 import re
 from mailjet_rest import Client
 
+def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
+    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}format=json'
+    requestHeader = f'Authorization Bearer {smsToken}'
+    result = requests.get(requestUrl,headers=requestHeader)
+    
+    return result
+
 url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
 wantedString = os.environ['SEARCH_STRING']
 siteName = 'Born To Learn'
@@ -142,10 +149,3 @@ result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
 if result != '200':
     result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
 print(f'sms server response: {result.text}')
-
-def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
-    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}format=json'
-    requestHeader = f'Authorization Bearer {smsToken}'
-    result = requests.get(requestUrl,headers=requestHeader)
-    
-    return result
