@@ -130,3 +130,22 @@ if message:
 
     response = mailjet.send.create(email)
     print("MailJet response:{}".format(response))
+
+smsServer1 = os.environ['SMS_SERVER1']
+smsServer2 = os.environ['SMS_SERVER12]
+smsToken = os.environ['SMS_TOKEN']
+smsFrom = os.environ['SMS_NUMBER']
+smsTo = os.environ['SMS_NUMBER']
+smsMessage = f'{wantedString}, found on {siteName}\n Go to URL: {url}'
+
+result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
+if result <> '200':
+    result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
+print(f'sms server response: {result.text}')
+
+def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
+    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}format=json'
+    requestHeader = f'Authorization Bearer {smsToken}'
+    result = requests.get(requestUrl,headers=requestHeader)
+    
+    return result
