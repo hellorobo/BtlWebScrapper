@@ -147,9 +147,9 @@ smsServer2 = os.environ['SMS_SERVER2']
 smsToken = os.environ['SMS_TOKEN']
 smsFrom = os.environ['SMS_NUMBER']
 smsTo = os.environ['SMS_NUMBER']
-smsMessage = f'{wantedString}, found on {siteName}\n Go to URL: {url}'
+smsMessage = f'{wantedString}, found on {siteName}'
 
 result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
 if result != '<Response [200]>':
     result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
-print(f'sms server response: {result}')
+print(f'SmsAPI response:{result}')
