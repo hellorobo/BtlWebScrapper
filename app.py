@@ -7,6 +7,7 @@ from mailjet_rest import Client
 
 url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
 wantedString = 'Exam Study'
+siteName = 'Born To Learn'
 
 # $ export CHROME_PATH=/usr/bin/chrome
 chrome_bin = os.environ['GOOGLE_CHROME_BIN']
@@ -84,10 +85,10 @@ if message:
     API_SECRET = os.environ['MJ_APIKEY_PRIVATE']
 
     mailjet = Client(auth=(API_KEY, API_SECRET), version='v3')
-    fromname = 'MessangerAPI'
+    fromname = 'BornToLearn - WebScrapper'
     sender = 'messanger@tutamail.com'
     recipients = [{'Email': 'ignorethismessage@gmail.com'}]
-    subject = f'{wantedString} - from Born To Learn - blog!'
+    subject = f'{wantedString} - found on {siteName}!'
     #message = "Today\'s Pact Book: {}\n URL: {}".format(dotd,url)
 
     css = '''
@@ -108,12 +109,12 @@ if message:
 
     html_body = '''
     <body>
-    <h2>Born To Learn - blog crawler found {0}\n</h2>
+    <p>Phrase: {0} was found on {3}\n</p>
 
-    <p>{1}</p>
+    <h2>{1}</h2>
     <h3> {2} </h3>
     </body>
-    '''.format(wantedString,message,url)
+    '''.format(wantedString,message,url,siteName)
 
     html_foot = '</html>'
 
