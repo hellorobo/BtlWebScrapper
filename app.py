@@ -1,4 +1,5 @@
 import os
+import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -146,6 +147,6 @@ smsTo = os.environ['SMS_NUMBER']
 smsMessage = f'{wantedString}, found on {siteName}\n Go to URL: {url}'
 
 result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
-if result != '200':
+if result != '<Response [200]>':
     result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
 print(f'sms server response: {result.text}')
