@@ -141,7 +141,7 @@ if message:
 
 smsServer1 = os.environ['SMS_SERVER1']
 smsServer2 = os.environ['SMS_SERVER2']
-smsToken = {"Authorization": "Bearer".format(os.environ['SMS_TOKEN'])}
+smsToken = {"Authorization": "Bearer ".format(os.environ['SMS_TOKEN'])}
 smsFrom = os.environ['SMS_NUMBER']
 smsTo = os.environ['SMS_NUMBER']
 smsMessage = f'{wantedString}, found on {siteName}\n Go to URL: {url}'
