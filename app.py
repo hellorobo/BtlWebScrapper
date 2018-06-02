@@ -132,7 +132,7 @@ if message:
     print("MailJet response:{}".format(response))
 
 smsServer1 = os.environ['SMS_SERVER1']
-smsServer2 = os.environ['SMS_SERVER12]
+smsServer2 = os.environ['SMS_SERVER2']
 smsToken = os.environ['SMS_TOKEN']
 smsFrom = os.environ['SMS_NUMBER']
 smsTo = os.environ['SMS_NUMBER']
