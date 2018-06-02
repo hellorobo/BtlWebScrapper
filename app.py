@@ -7,7 +7,7 @@ import re
 from mailjet_rest import Client
 
 def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
-    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to{smsTo}&message={smsMessage}&json=True'
+    requestUrl=f'https://{smsServer}/sms.do?from={smsFrom}&to={smsTo}&message={smsMessage}&json=True'
     requestHeader = {"Authorization": f"Bearer {smsToken}"}
     print(f'requestUrl: {requestUrl}')
     print(f'requestHeader: {requestHeader}')
