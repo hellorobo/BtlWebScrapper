@@ -21,12 +21,12 @@ siteName = 'Born To Learn'
 # $ export CHROME_PATH=/usr/bin/chrome
 chrome_bin = os.environ['GOOGLE_CHROME_BIN']
 #chrome_bin = '/usr/bin/chrome'
-print(f'chrome_bin: {chrome_bin}')
+#print(f'chrome_bin: {chrome_bin}')
 
 # $ export CHROME_DRIVER=~/Python/BtlWebScrapper/venv/chromedriver/chromedriver
 # chrome_driver = '/home/user1/Python/BtlWebScrapper/venv/chromedriver/chromedriver'
 chrome_driver = os.environ['CHROMEDRIVER_PATH']
-print(f'chrome_driver: {chrome_driver}')
+#print(f'chrome_driver: {chrome_driver}')
 
 chrome_options = Options()
 chrome_options.binary_location = chrome_bin
@@ -57,7 +57,7 @@ try:
     element_present = EC.presence_of_element_located((By.ID, neededElement))
     WebDriverWait(driver, timeout).until(element_present)
     isPageLoaded = True
-    print("OK, found page element")
+    print("Web page loaded completely")
 except TimeoutException:
     isPageLoaded = False
     print ("Timed out waiting for page to load")
@@ -150,4 +150,4 @@ if message:
     result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
     if result.status_code != 200:
         result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
-    print(f'SmsAPI response:{result.text}')
+    print(f'SmsAPI:{result.text}')
