@@ -1,22 +1,32 @@
 import os
+import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import re
 from mailjet_rest import Client
 
+def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
+    requestUrl = f'https://{smsServer}/sms.do?from={smsFrom}&to={smsTo}&message={smsMessage}&format=json'
+    requestHeader = {"Authorization": f"Bearer {smsToken}"}
+    result = requests.get(requestUrl,headers=requestHeader)
+    print(f'SmsAPI:{result}')
+
+    return result
+
 url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
-wantedString = 'Exam Study'
+wantedString = os.environ['SEARCH_STRING']
+siteName = 'Born To Learn'
 
 # $ export CHROME_PATH=/usr/bin/chrome
-chrome_bin = os.environ['CHROME_PATH']
+chrome_bin = os.environ['GOOGLE_CHROME_BIN']
 #chrome_bin = '/usr/bin/chrome'
-print(f'chrome_bin: {chrome_bin}')
+#print(f'chrome_bin: {chrome_bin}')
 
 # $ export CHROME_DRIVER=~/Python/BtlWebScrapper/venv/chromedriver/chromedriver
 # chrome_driver = '/home/user1/Python/BtlWebScrapper/venv/chromedriver/chromedriver'
-chrome_driver = os.environ['CHROME_DRIVER']
-print(f'chrome_driver: {chrome_driver}')
+chrome_driver = os.environ['CHROMEDRIVER_PATH']
+#print(f'chrome_driver: {chrome_driver}')
 
 chrome_options = Options()
 chrome_options.binary_location = chrome_bin
@@ -47,7 +57,7 @@ try:
     element_present = EC.presence_of_element_located((By.ID, neededElement))
     WebDriverWait(driver, timeout).until(element_present)
     isPageLoaded = True
-    print("OK, found page element")
+    print("Web page loaded completely")
 except TimeoutException:
     isPageLoaded = False
     print ("Timed out waiting for page to load")
@@ -84,10 +94,10 @@ if message:
     API_SECRET = os.environ['MJ_APIKEY_PRIVATE']
 
     mailjet = Client(auth=(API_KEY, API_SECRET), version='v3')
-    fromname = 'MessangerAPI'
+    fromname = 'BornToLearn - WebScrapper'
     sender = 'messanger@tutamail.com'
     recipients = [{'Email': 'ignorethismessage@gmail.com'}]
-    subject = f'{wantedString} - from Born To Learn - blog!'
+    subject = f'{wantedString} - found on {siteName}!'
     #message = "Today\'s Pact Book: {}\n URL: {}".format(dotd,url)
 
     css = '''
@@ -95,7 +105,7 @@ if message:
     body {font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;}
     h2 {clear: both;font-size: 130%; }
     h3 {clear: both;font-size: 115%;margin-left: 20px;margin-top: 30px;}
-    p {margin-left: 20px; font-size: 12px;}
+    p {margin-left: 20px; font-size: 14px;}
     </style>
     '''
 
@@ -108,12 +118,12 @@ if message:
 
     html_body = '''
     <body>
-    <h2>Born To Learn - blog crawler found {0}\n</h2>
+    <p>Phrase: {0} was found on {3}\n</p>
 
-    <p>{1}</p>
+    <h2>{1}</h2>
     <h3> {2} </h3>
     </body>
-    '''.format(wantedString,message,url)
+    '''.format(wantedString,message,url,siteName)
 
     html_foot = '</html>'
 
@@ -129,3 +139,15 @@ if message:
 
     response = mailjet.send.create(email)
     print("MailJet response:{}".format(response))
+
+    smsServer1 = os.environ['SMS_SERVER1']
+    smsServer2 = os.environ['SMS_SERVER2']
+    smsToken = os.environ['SMS_TOKEN']
+    smsFrom = os.environ['SMS_FROM']
+    smsTo = os.environ['SMS_TO']
+    smsMessage = f'ALERT! Heroku/btl-webscrapper found \'{wantedString}\' on {url}'
+
+    result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
+    if result.status_code != 200:
+        result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
+    print(f'SmsAPI:{result.text}')
