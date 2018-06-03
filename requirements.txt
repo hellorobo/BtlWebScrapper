@@ -3,3 +3,4 @@ bs4
 lxml
 selenium
 mailjet_rest
+pymongo
