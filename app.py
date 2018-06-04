@@ -69,7 +69,8 @@ if isPageLoaded:
 
     blogposts = soup.find('ul', id="btl-blog-posts-ul")
     items = blogposts.findAll('div', class_="btl-blog-posts-contents-right")
-
+    
+    isMatched = False
     regex = f'\\b{wantedString}\\b'
     matches = []
     for i in items:
@@ -79,6 +80,7 @@ if isPageLoaded:
             matches.append(post)
 
     if len(matches) > 0:
+        isMatched = True
         message = 'patten matched in: \n'
         for m in matches:
             message += f' --> {m}\n'
@@ -139,15 +141,16 @@ if message:
 
     response = mailjet.send.create(email)
     print("MailJet response:{}".format(response))
+    
+    if isMatched:
+        smsServer1 = os.environ['SMS_SERVER1']
+        smsServer2 = os.environ['SMS_SERVER2']
+        smsToken = os.environ['SMS_TOKEN']
+        smsFrom = os.environ['SMS_FROM']
+        smsTo = os.environ['SMS_TO']
+        smsMessage = f'ALERT! Heroku/btl-webscrapper found \'{wantedString}\' on {url}'
 
-    smsServer1 = os.environ['SMS_SERVER1']
-    smsServer2 = os.environ['SMS_SERVER2']
-    smsToken = os.environ['SMS_TOKEN']
-    smsFrom = os.environ['SMS_FROM']
-    smsTo = os.environ['SMS_TO']
-    smsMessage = f'ALERT! Heroku/btl-webscrapper found \'{wantedString}\' on {url}'
-
-    result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
-    if result.status_code != 200:
-        result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
-    print(f'SmsAPI:{result.text}')
+        result = sendSms(smsServer1,smsToken,smsFrom,smsTo,smsMessage)
+        if result.status_code != 200:
+            result = sendSms(smsServer2,smsToken,smsFrom,smsTo,smsMessage)
+        print(f'SmsAPI:{result.text}')
