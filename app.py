@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import re
 from mailjet_rest import Client
+import pymongo
 
 def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
     requestUrl = f'https://{smsServer}/sms.do?from={smsFrom}&to={smsTo}&message={smsMessage}&format=json'
@@ -17,6 +18,16 @@ def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
 url = 'https://www.microsoft.com/en-us/learning/community-blog.aspx'
 wantedString = os.environ['SEARCH_STRING']
 siteName = 'Born To Learn'
+
+dbserver = os.environ['DB_SERVER']
+dbname = os.environ['DB_NAME']
+dbcollection = os.environ['DB_COLLECTION']
+dbuser = os.environ['DB_USER']
+dbpass = os.environ['DB_PASS']
+
+connection = pymongo.MongoClient('mongodb://{}:{}@{}/{}}'.format(dbuser,dbpass,dbserver,dbname))
+db = connection[dbname]
+posts_col = db[dbcollection]
 
 # $ export CHROME_PATH=/usr/bin/chrome
 chrome_bin = os.environ['GOOGLE_CHROME_BIN']
@@ -77,7 +88,18 @@ if isPageLoaded:
         post = i.getText()
         match = re.search(regex, post, re.IGNORECASE)
         if match:
-            matches.append(post)
+            query = {'post': post}
+            try:
+                existingDocument = posts_col.find_one_and_replace(
+                                filter=query,
+                                replacement=query,
+                                upsert=True,
+                                return_document=pymongo.ReturnDocument.BEFORE
+                                )
+                if existingDocument == None:
+                    matches.append(post)
+
+            except Exception as e: print("Exception: ", type(e), e)
 
     if len(matches) > 0:
         isMatched = True
