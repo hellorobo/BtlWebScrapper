@@ -25,7 +25,7 @@ dbcollection = os.environ['DB_COLLECTION']
 dbuser = os.environ['DB_USER']
 dbpass = os.environ['DB_PASS']
 
-connection = pymongo.MongoClient('mongodb://{}:{}@{}/{}}'.format(dbuser,dbpass,dbserver,dbname))
+connection = pymongo.MongoClient('mongodb://{}:{}@{}/{}'.format(dbuser,dbpass,dbserver,dbname))
 db = connection[dbname]
 posts_col = db[dbcollection]
 
