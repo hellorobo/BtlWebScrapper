@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 import re
 from mailjet_rest import Client
 import pymongo
+from datetime import datetime
 
 def sendSms(smsServer,smsToken,smsFrom,smsTo,smsMessage):
     requestUrl = f'https://{smsServer}/sms.do?from={smsFrom}&to={smsTo}&message={smsMessage}&format=json'
@@ -28,6 +29,7 @@ dbpass = os.environ['DB_PASS']
 connection = pymongo.MongoClient('mongodb://{}:{}@{}/{}'.format(dbuser,dbpass,dbserver,dbname))
 db = connection[dbname]
 posts_col = db[dbcollection]
+logs_col = db.logs
 
 # $ export CHROME_PATH=/usr/bin/chrome
 chrome_bin = os.environ['GOOGLE_CHROME_BIN']
@@ -113,6 +115,19 @@ else:
     message = 'Couldn\'t retrieve page contents'
 
 print(message)
+
+try:
+    r = requests.get('https://www.icanhazip.com/')
+    ip = r.text
+    now = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+    result = logs_col.insert_one(
+                {"datetime": now,
+                 "ip": ip,
+                 }
+                )
+    print('{} connection made from {}'.format(now, ip))
+except Exception as e: print("Exception: ", type(e), e)
+
 connection.close()
 
 if message:
