@@ -64,15 +64,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 timeout = 5
 neededElement = 'btl-blog-post-1-right'
+isPageLoaded = False
 try:
     element_present = EC.presence_of_element_located((By.ID, neededElement))
     WebDriverWait(driver, timeout).until(element_present)
     isPageLoaded = True
     print("Web page loaded completely")
 except TimeoutException:
-    isPageLoaded = False
     print ("Timed out waiting for page to load")
-
+except ConnectionResetErorr:
+    print ("Connection reset by peer")
+    
 if isPageLoaded:
     html = driver.page_source
     driver.close()
@@ -100,7 +102,6 @@ if isPageLoaded:
                     matches.append(post)
 
             except Exception as e: print("Exception: ", type(e), e)
-
     if len(matches) > 0:
         isMatched = True
         message = 'patten matched in: \n'
@@ -112,6 +113,7 @@ else:
     message = 'Couldn\'t retrieve page contents'
 
 print(message)
+connection.close()
 
 if message:
     API_KEY = os.environ['MJ_APIKEY_PUBLIC']
